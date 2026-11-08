@@ -172,3 +172,63 @@ markmap:
 - **Recursion**
   - Cả Quick Sort và Merge Sort trong phiên bản đã học đều đệ quy
   - Base case kết thúc nhánh, không thực hiện thêm partition/split
+
+## Tuần 2 · 02–08/11/2026
+
+### Array — Mảng
+- **Zero-based indexing** — phần tử thứ k ở index k − 1
+- **Access / Update** theo index O(1) trong mô hình mảng
+- **Traversal / Linear Search** O(n) trong trường hợp xấu nhất
+- **Insert / Delete**
+  - Thao tác đầu hoặc giữa mảng có thể phải dịch các phần tử phía sau → worst-case O(n)
+  - Xóa cuối O(1) nếu chỉ giảm kích thước logic và không thu nhỏ bộ nhớ
+- **Fixed-size vs Dynamic Array**
+  - Mảng cố định có dung lượng cố định. Dynamic array có thể cấp phát vùng lớn hơn và sao chép dữ liệu.
+  - Append O(1) khi còn chỗ, O(n) khi phải tăng dung lượng. Nếu tăng dung lượng theo hệ số cố định lớn hơn 1, append có amortized O(1).
+
+### Singly Linked List — Danh sách liên kết đơn
+- **Node** chứa data và next. Head trỏ đến node đầu, next của node cuối là null.
+- **Traversal / Access**
+  - Bắt đầu từ head tại index 0. Đến index i bằng i bước next. Ví dụ index 2 là node thứ ba, cần hai bước next.
+  - Access theo index hoặc tìm theo giá trị có worst-case O(n). Truy cập head O(1).
+- **Insert / Delete**
+  - Thêm hoặc xóa head O(1). Thêm sau một node đã biết hoặc xóa node ngay sau predecessor đã biết O(1).
+  - Nếu phải tìm node hoặc predecessor trước, tổng chi phí có thể là O(n).
+  - Thêm cuối O(1) nếu có tail pointer, O(n) nếu phải duyệt từ head.
+  - Xóa cuối thường O(n) dù có tail pointer vì cần tìm node liền trước tail.
+  - Khi thao tác làm danh sách rỗng hoặc đổi node cuối, cập nhật head và tail tương ứng nếu có lưu hai con trỏ.
+
+### Stack và Queue
+- **Stack — LIFO**: phần tử thêm sau cùng được lấy ra trước
+  - push thêm vào đỉnh, pop lấy và xóa đỉnh, peek xem đỉnh, isEmpty kiểm tra rỗng.
+  - Pop trên stack rỗng gây underflow. Với linked list thao tác ở head, push/pop O(1). Với dynamic array, push ở cuối amortized O(1), lần resize có thể O(n).
+  - Ví dụ push A → push B → pop trả về B, A còn trên đỉnh.
+- **Queue — FIFO**: phần tử vào trước được lấy ra trước
+  - enqueue thêm ở cuối, dequeue lấy và xóa đầu, front/peek xem đầu, isEmpty kiểm tra rỗng.
+  - Linked list giữ head/tail hoặc circular buffer dung lượng cố định hỗ trợ enqueue/dequeue O(1). Nếu xóa đầu mảng bằng cách dịch các phần tử, dequeue O(n).
+  - Ví dụ enqueue A → enqueue B → dequeue trả về A, B trở thành front.
+
+### Hash Table — Key, Value và Collision
+- **Hash function** ánh xạ key sang bucket hoặc slot. Ví dụ với key nguyên không âm, h(k) = k mod m, m là số bucket/slot.
+- **Insert / Lookup / Update / Delete** luôn xác định key thực tế. Hai key cùng hash index có thể là hai mục khác nhau.
+- **Separate Chaining**
+  - Mỗi bucket chứa một nhóm mục, ví dụ một linked list. Khi collision, nhiều key có thể nằm trong cùng bucket.
+  - Lookup duyệt bucket và so sánh từng key. Update sửa đúng mục, delete chỉ gỡ mục có key trùng.
+- **Open Addressing — Linear Probing**
+  - Mỗi slot chứa tối đa một mục. Khi collision, thử lần lượt các slot theo (h(k) + i) mod m, i = 0, 1, …, m − 1.
+  - Lookup dừng khi tìm đúng key, gặp EMPTY hoặc đã thử hết một vòng. Gặp DELETED thì tiếp tục dò.
+  - **Tombstone** (DELETED) giữ chuỗi dò sau khi xóa. Insert có thể tái sử dụng tombstone, nhưng với bảng key duy nhất vẫn cần kiểm tra key có tồn tại ở phía sau trước khi thêm mục mới.
+  - Ví dụ m = 5, thêm 4 rồi 9. Cả hai hash về 4, nên 9 nằm ở slot 0. Xóa 4 thành DELETED giúp lookup 9 tiếp tục qua slot 4. Đổi slot 4 thành EMPTY sẽ khiến lookup dừng sớm.
+
+### Load Factor, Complexity và Rehashing
+- **Load factor** α = n/m, với n là số mục đang lưu và m là số bucket/slot.
+  - Chaining có thể có α > 1.
+  - Open addressing có α ≤ 1. Giữ α cách xa 1 giúp hạn chế dò dài. Tombstones không tính vào n nhưng làm tăng số slot mà lookup phải đi qua.
+- **Expected vs Worst-case**
+  - Chaining lookup expected O(1 + α) với hash phân bố đủ đều và chi phí hash/so key O(1). Khi α được giữ bounded, expected O(1).
+  - Nếu tất cả key rơi vào cùng bucket, chaining lookup worst-case O(n). Linear probing có thể phải dò O(m) slot, tương ứng O(n) khi m = Θ(n).
+- **Resize & Rehash**
+  - Thay đổi m có thể đổi index của key. Phải tính lại vị trí cho các mục đang lưu trong bảng mới.
+  - Một lần resize/rehash tốn O(n) expected trong mô hình đã học, với kích thước bảng tỉ lệ với n và chi phí chèn lại expected O(1).
+  - Tăng dung lượng theo hệ số cố định và giữ load factor phù hợp cho phép một chuỗi insert có amortized expected O(1) mỗi thao tác.
+  - **Expected** lấy trung bình theo mô hình xác suất. **Amortized** chia tổng chi phí của một chuỗi cho số thao tác, kể cả những lần resize đắt.

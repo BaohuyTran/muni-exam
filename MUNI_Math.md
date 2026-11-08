@@ -198,3 +198,72 @@ markmap:
 - **Cartesian Product**: tạo ordered pairs, giữ thứ tự hai vị trí
 - **Power Set**: phân biệt số phần tử ban đầu và số tập con; dùng lũy thừa đúng cấp
 - **∈ hay ⊆?**: xem vế phải chứa trực tiếp đối tượng gì; với ⊆, kiểm tra các phần tử của vế trái
+
+## Tuần 2 · 02–08/11/2026
+
+### Propositional Logic — Logic mệnh đề
+- **Proposition** là phát biểu có truth value True hoặc False.
+- **Negation** ¬p đảo giá trị chân lý. Double negation ¬¬p ≡ p.
+- **Conjunction** p ∧ q đúng khi cả hai đúng.
+- **Disjunction** p ∨ q đúng khi có ít nhất một vế đúng, kể cả khi cả hai đúng (inclusive OR).
+- **Implication** p → q chỉ sai khi p đúng và q sai. p là hypothesis/antecedent, q là conclusion/consequent.
+  - Khi p sai, p → q đúng (vacuous truth).
+  - Converse là q → p. Hai chiều có thể khác giá trị chân lý.
+- **Biconditional** p ↔ q đọc là “p if and only if q”. Đúng khi hai vế cùng truth value.
+  - p ↔ q ≡ (p → q) ∧ (q → p).
+- **Truth table** với k biến có 2^k cách gán. Tạo cột cho biểu thức con rồi tính từ trong ngoặc ra ngoài.
+
+### Logical Equivalence — Tương đương logic
+- P ≡ Q khi chúng có cùng truth value ở mọi cách gán. Có thể kiểm tra bằng hai cột cuối trong truth table.
+- **Implication**: (p → q) ≡ (¬p ∨ q).
+- **Negation of Implication**: ¬(p → q) ≡ p ∧ ¬q.
+- **De Morgan**
+  - ¬(p ∧ q) ≡ ¬p ∨ ¬q.
+  - ¬(p ∨ q) ≡ ¬p ∧ ¬q.
+- **Commutative**: p ∧ q ≡ q ∧ p và p ∨ q ≡ q ∨ p.
+- **Distributive**
+  - p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r).
+  - p ∨ (q ∧ r) ≡ (p ∨ q) ∧ (p ∨ r).
+- **Absorption**
+  - p ∨ (p ∧ q) ≡ p.
+  - p ∧ (p ∨ q) ≡ p.
+  - Ví dụ ¬¬p ∧ (p ∨ ¬q) ≡ p ∧ (p ∨ ¬q) ≡ p. Bước đầu dùng Double Negation, bước sau dùng Absorption.
+- **Satisfiability**
+  - Satisfiable: có ít nhất một dòng True.
+  - Unsatisfiable / contradiction: mọi dòng False, ví dụ p ∧ ¬p.
+  - Tautology: mọi dòng True, ví dụ p ∨ ¬p. Mọi tautology đều satisfiable.
+
+### Predicate & Quantifiers — Vị từ và lượng từ
+- **Predicate** P(x) là phát biểu phụ thuộc x. Domain quy định các giá trị x được xét.
+- **Universal** ∀x ∈ D, P(x) nghĩa là P đúng với mọi x trong D. Một counterexample đủ để bác bỏ.
+- **Existential** ∃x ∈ D, P(x) nghĩa là có ít nhất một x trong D làm P đúng. Chỉ cần tìm một witness.
+- **Phủ định lượng từ**
+  - ¬(∀x ∈ D, P(x)) ≡ ∃x ∈ D, ¬P(x).
+  - ¬(∃x ∈ D, P(x)) ≡ ∀x ∈ D, ¬P(x).
+  - Giữ domain, đổi lượng từ, rồi phủ định predicate. Ví dụ phủ định “Every x in D satisfies x > 3” là “Some x in D satisfies x ≤ 3”.
+  - Nếu predicate có AND hoặc OR, áp dụng De Morgan khi đẩy phủ định vào trong.
+
+### Binary Relations — Quan hệ hai ngôi
+- Quan hệ R trên tập A là tập con của A × A. aRb nghĩa là (a,b) ∈ R.
+- **Ordered pairs**: liệt kê trực tiếp các cặp thuộc R.
+- **Relation matrix**: phần tử Mᵢⱼ = 1 nếu (aᵢ,aⱼ) ∈ R. Dùng cùng thứ tự phần tử cho hàng và cột.
+- **Directed graph**: aRb tương ứng mũi tên a → b. Cặp (a,a) là self-loop.
+- **Reflexive**: ∀a ∈ A, aRa. Đường chéo chính toàn 1. Thiếu một self-loop là phản ví dụ.
+- **Symmetric**: aRb ⇒ bRa. Mỗi cặp có cặp đảo. Relation matrix đối xứng.
+- **Antisymmetric**: aRb ∧ bRa ⇒ a = b. Hai phần tử khác nhau có quan hệ theo cả hai chiều là phản ví dụ.
+  - Symmetric và Antisymmetric có thể cùng đúng. Quan hệ bằng nhau là một ví dụ.
+- **Transitive**: aRb ∧ bRc ⇒ aRc.
+  - Tìm hai cặp nối được tại b, rồi kiểm tra cặp tắt (a,c). Phản ví dụ là hai cặp đầu có mặt nhưng cặp tắt vắng mặt.
+  - Nếu có aRb và bRa, tính bắc cầu yêu cầu cả aRa và bRb.
+
+### Equivalence Relations — Quan hệ tương đương
+- Cần đủ Reflexive + Symmetric + Transitive.
+- **Equivalence class** [a] = {x ∈ A | xRa}. Dấu | đọc là “sao cho”.
+- Hai phần tử liên hệ với nhau thì có cùng lớp. Hai lớp khác nhau không giao nhau. Các lớp phủ hết A và tạo thành một partition.
+- Ví dụ same parity trên ℤ là một quan hệ tương đương. Các lớp là số chẵn và số lẻ.
+
+### Order Relations — Quan hệ thứ tự
+- **Partial order** cần Reflexive + Antisymmetric + Transitive.
+- **Comparable**: aRb hoặc bRa. Nếu cả hai chiều đều không có, a và b incomparable.
+- **Total / Linear order**: partial order và mọi cặp phần tử đều comparable.
+- Ví dụ ≤ trên ℤ là total order. Quan hệ chia hết trên số nguyên dương là partial order, với 2 và 3 incomparable. Quan hệ ⊆ trên P({1,2}) là partial order, với {1} và {2} incomparable.
